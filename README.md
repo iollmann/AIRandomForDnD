@@ -25,6 +25,7 @@ Note: we could ask the LLM to use the D500 value directlty and apply suitable mo
 - `generator.c`: The core RNG logic and distribution verifier.
 - `reader.c`: A lightweight utility for developers to pull values from the generated table.
 - `test.c` : Some test code to verify uniform distrubtion and table values are between [1,N] as desired.
+- 'AIRandom.h' : Expose C implementation for testing. Could be used as a library in a App, but I am not sure why you would bother. 
 - `fair_dice.md`: The output file containing the 500-unit sequence and AI instructions.
 
 ## Mathematical Mapping
