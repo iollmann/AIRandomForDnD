@@ -24,7 +24,8 @@ Note: we could ask the LLM to use the D500 value directlty and apply suitable mo
 ## Core Components
 - `generator.c`: The core RNG logic and distribution verifier.
 - `reader.c`: A lightweight utility for developers to pull values from the generated table.
-- `fair_deck.md`: The output file containing the 500-unit sequence.
+- `test.c` : Some test code to verify uniform distrubtion and table values are between [1,N] as desired.
+- `fair_dice.md`: The output file containing the 500-unit sequence and AI instructions.
 
 ## Mathematical Mapping
 To derive standard D&D dice from the 500-unit Master Value ($V$):
