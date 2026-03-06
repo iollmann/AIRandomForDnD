@@ -52,7 +52,7 @@ typedef enum : uint8_t
 typedef struct
 {
     uint32_t result;    // [1,N] for die with N sides.
-    uint32_t index;     // [1,500]
+    uint32_t index;     // [1,600]
 }AIRandom_DieRoll;
 
 /*! @abstract Roll a uniformly distributed pseudorandom die

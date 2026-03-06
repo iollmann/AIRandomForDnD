@@ -32,13 +32,13 @@
 typedef struct
 {
     uint8_t    values[7];   // {D4, D6, D8, D10, D12, D20, D100
-    uint16_t    d500;
+    uint16_t    d600;
 }DieTable;
 
-/*! @abstract initialize values according to value in d500 */
+/*! @abstract initialize values according to value in d600 */
 static inline void DieTable_InitValues( DieTable * /*nonnull*/ entry)
 {
-    uint32_t val = entry->d500;
+    uint32_t val = entry->d600;
     assert( 1 <= val && val <= AIRANDOM_TABLE_SIZE);
     
     val = val - 1;   // convert 1 based numbers to 0 based numbers so that the modulo operator does what we want here. 
@@ -81,9 +81,9 @@ static inline void InitializeTable( void )
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{    // Make sure we only do this once. Avoid reentrancy.
-        // Create initial uniform distribution of all values [1,500], in order
+        // Create initial uniform distribution of all values [1,600], in order
         for( unsigned long i = 0; i < AIRANDOM_TABLE_SIZE; i++)
-            dieTable[i].d500 = i+1;
+            dieTable[i].d600 = i+1;
         
         // We will use a fixed random number seed so we get the same table every time
         uint32_t seed = 11974;  // January 1974, date D&D invented
@@ -94,10 +94,10 @@ static inline void InitializeTable( void )
             int index1 = rand_r(&seed) % AIRANDOM_TABLE_SIZE;
             int index2 = rand_r(&seed) % AIRANDOM_TABLE_SIZE;
             
-            // swap the d500 table values at index1 and index2
-            uint16_t temp = dieTable[index1].d500;
-            dieTable[index1].d500 = dieTable[index2].d500;
-            dieTable[index2].d500 = temp;
+            // swap the d600 table values at index1 and index2
+            uint16_t temp = dieTable[index1].d600;
+            dieTable[index1].d600 = dieTable[index2].d600;
+            dieTable[index2].d600 = temp;
         }
         
         // Fill out table values
@@ -116,7 +116,7 @@ static inline AIRandom_DieRoll ReadDie( AIRandom_DieType dieType, uint32_t index
     
     uint32_t offset = result.index - 1;  // deal with C 0-based indexing
     if( dieType >= AIRandom_D600 )
-        result.result = dieTable[offset].d500;            // bad value passed in for die type. Return D500 result.
+        result.result = dieTable[offset].d600;            // bad value passed in for die type. Return D600 result.
     else
         result.result = dieTable[offset].values[dieType];    // return die roll of correct result
     
@@ -199,7 +199,7 @@ extern void AIRandom_PrintDieTable( FILE * /* nonnull*/ where )
                 entry->values[4],
                 entry->values[5],
                 entry->values[6],
-                entry->d500 );
+                entry->d600 );
     }
 
     fprintf(where, "\n");
