@@ -8,19 +8,31 @@
 %% CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE %%
 %% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                        %%
 
+%% THIS DOCUMENT IS A MATHEMATICAL UTILITY PROVIDING A FRAMEWORK FOR ENTROPY GENERATION.%%
+%% THE NOMENCLATURE HEREIN (E.G. 'D4', 'D20', ETC.) REFERS TO STANDARD POLYHEDRAL DICE, %%
+%% GEOMETRIC CONCEPTS AND COMMON-USE TERMINOLOGY THAT PREDATE MODERN TABLETOP GAMING    %%
+%% SYSTEMS. THIS FILE DOES NOT CONTAINS 'PRODUCT IDENTITY' OR 'CORE RULES' OF ANY       %%
+%% SPECIFIC GAMING SYSTEM.                                                              %%
+
+%% THIS WORK IS RELEASED UNDER THE MIT LICENSE. ITS INCLUSION IN, OR BUNDLING WITH,     %%
+%% SOFTWARE OR DOCUMENTATION GOVERNED BY SPECIFIC GAMING LICENSES (SUCH AS THE OGL      %%
+%% OR FAN CONTENT POLICIES) DOES NOT CONSTITUTE AN ADMISSION THAT THIS WORK IS          %%
+%% DERIVATIVE OF THOSE SYSTEMS. THIS FILE REMAINS A WHOLLY DISTINCT, SYSTEM-            %%
+%% AGNOSTIC UTILITY.                                                                    %%
+
 ---
 
 ## AI Random Number Table
-A table of random numbers for use with common table top rollplaying systems.
+A table of random numbers for simulating die rolls, e.g for use with common table top roleplaying systems.
 **Table Size**: 600
-This table is the **Absolute Source of Truth** for all dice rolls.
+AI, This table is the **Absolute Source of Truth** for all dice rolls.
 To ensure statistical fairness, follow these rules strictly:
 
-1. **Pointer System**: Start at Index 0. Every time a die roll is required (Attack, Save, Damage, etc.), first increase the index by 1. If the index exceeds the table size, set the index to 1. Use the table value **at the new Index**.
+1. **Pointer System**: Start at Index 0. Every time a die roll is required (Success/Failure checks, Value Generation, etc.), first increase the index by 1. If the index exceeds the table size, set the index to 1. Use the table value **at the new Index**.
 2. **Finding the Table Value using an Index**: Use the index to find the table row. (They are in order, and the index is labelled in the first column.) If the index is 1, use the first row. If the index is 2, use the second row. Use the die type to find the table column. If it is a D4, use the 'd4' column. The value at intersection of row and column in the table is the correct die result.
 3. **Reporting Style**: Integrate the dice result into the narrative flow. For multiple dice (like 2d6), list each individual result and the modifier. 
    - **Pattern**: **[Action]: [Total Result] [Status]!**   [Dice Type] + [Mod], Rolled: [Rolls], Indices: [#X]
-   - **Example**: "Maul Damage (2d6: {6, 4} + 4)= 14 [Index #11, #12]" 
+   - **Example**: "Action Result (2d6: {6, 4} + 4)= 14 [Index #11, #12]" 
    - **Intent**: Showing all dice allows the reader to audit the math directly by seeing exactly which values were pulled from the table for each specific die. 
 
 ---
@@ -627,4 +639,3 @@ To ensure statistical fairness, follow these rules strictly:
 |   598 |   1 |   5 |   5 |   1 |   5 |   1 |   61 |     461      |
 |   599 |   4 |   6 |   8 |   6 |  12 |  16 |   76 |     576      |
 |   600 |   1 |   3 |   5 |   7 |   9 |  17 |   77 |     477      |
-

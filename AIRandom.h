@@ -6,11 +6,22 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 //  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+//  THIS DOCUMENT IS A MATHEMATICAL UTILITY PROVIDING A FRAMEWORK FOR ENTROPY GENERATION.
+//  THE NOMENCLATURE HEREIN (E.G. 'D4', 'D20', ETC.) REFERS TO STANDARD POLYHEDRAL DICE,
+//  GEOMETRIC CONCEPTS AND COMMON-USE TERMINOLOGY THAT PREDATE MODERN TABLETOP GAMING
+//  SYSTEMS. THIS FILE DOES NOT CONTAINS 'PRODUCT IDENTITY' OR 'CORE RULES' OF ANY
+//  SPECIFIC GAMING SYSTEM.
+
+//  THIS WORK IS RELEASED UNDER THE MIT LICENSE. ITS INCLUSION IN, OR BUNDLING WITH,
+//  SOFTWARE OR DOCUMENTATION GOVERNED BY SPECIFIC GAMING LICENSES (SUCH AS THE OGL
+//  OR FAN CONTENT POLICIES) DOES NOT CONSTITUTE AN ADMISSION THAT THIS WORK IS
+//  DERIVATIVE OF THOSE SYSTEMS. THIS FILE REMAINS A WHOLLY DISTINCT, SYSTEM-
+//  AGNOSTIC UTILITY.
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 
-// Expose random functionality for testing. Could also be used as a library, but obviously not callable by AI unless it can build and run C code.
 
 typedef enum : uint8_t
 {
@@ -21,7 +32,7 @@ typedef enum : uint8_t
     AIRandom_D12,       // [1,12]
     AIRandom_D20,       // [1,20]
     AIRandom_D100,      // [1,100]
-    AIRandom_D500       // [1,500]  probably not very popular.
+    AIRandom_D600       // [1,500]  probably not very popular.
 }AIRandom_DieType;
 
 // factorization of dice for least common multiple.

@@ -6,6 +6,17 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 //  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+//  THIS DOCUMENT IS A MATHEMATICAL UTILITY PROVIDING A FRAMEWORK FOR ENTROPY GENERATION.
+//  THE NOMENCLATURE HEREIN (E.G. 'D4', 'D20', ETC.) REFERS TO STANDARD POLYHEDRAL DICE,
+//  GEOMETRIC CONCEPTS AND COMMON-USE TERMINOLOGY THAT PREDATE MODERN TABLETOP GAMING
+//  SYSTEMS. THIS FILE DOES NOT CONTAINS 'PRODUCT IDENTITY' OR 'CORE RULES' OF ANY
+//  SPECIFIC GAMING SYSTEM.
+
+//  THIS WORK IS RELEASED UNDER THE MIT LICENSE. ITS INCLUSION IN, OR BUNDLING WITH,
+//  SOFTWARE OR DOCUMENTATION GOVERNED BY SPECIFIC GAMING LICENSES (SUCH AS THE OGL
+//  OR FAN CONTENT POLICIES) DOES NOT CONSTITUTE AN ADMISSION THAT THIS WORK IS
+//  DERIVATIVE OF THOSE SYSTEMS. THIS FILE REMAINS A WHOLLY DISTINCT, SYSTEM-
+//  AGNOSTIC UTILITY.
 
 #include "AIRandom.h"
 #include "stdatomic.h"
@@ -104,7 +115,7 @@ static inline AIRandom_DieRoll ReadDie( AIRandom_DieType dieType, uint32_t index
     result.index = index;
     
     uint32_t offset = result.index - 1;  // deal with C 0-based indexing
-    if( dieType >= AIRandom_D500 )
+    if( dieType >= AIRandom_D600 )
         result.result = dieTable[offset].d500;            // bad value passed in for die type. Return D500 result.
     else
         result.result = dieTable[offset].values[dieType];    // return die roll of correct result
@@ -140,22 +151,34 @@ extern void AIRandom_PrintDieTable( FILE * /* nonnull*/ where )
     fprintf(where, "%%%% PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT   %%%%\n");
     fprintf(where, "%%%% HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF %%%%\n");
     fprintf(where, "%%%% CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE %%%%\n");
-    fprintf(where, "%%%% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                        %%%%\n");
+    fprintf(where, "%%%% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                        %%%%\n\n");
+
+    fprintf(where, "%%%% THIS DOCUMENT IS A MATHEMATICAL UTILITY PROVIDING A FRAMEWORK FOR ENTROPY GENERATION.%%%%\n");
+    fprintf(where, "%%%% THE NOMENCLATURE HEREIN (E.G. 'D4', 'D20', ETC.) REFERS TO STANDARD POLYHEDRAL DICE, %%%%\n");
+    fprintf(where, "%%%% GEOMETRIC CONCEPTS AND COMMON-USE TERMINOLOGY THAT PREDATE MODERN TABLETOP GAMING    %%%%\n");
+    fprintf(where, "%%%% SYSTEMS. THIS FILE DOES NOT CONTAINS 'PRODUCT IDENTITY' OR 'CORE RULES' OF ANY       %%%%\n");
+    fprintf(where, "%%%% SPECIFIC GAMING SYSTEM.                                                              %%%%\n\n");
+
+    fprintf(where, "%%%% THIS WORK IS RELEASED UNDER THE MIT LICENSE. ITS INCLUSION IN, OR BUNDLING WITH,     %%%%\n");
+    fprintf(where, "%%%% SOFTWARE OR DOCUMENTATION GOVERNED BY SPECIFIC GAMING LICENSES (SUCH AS THE OGL      %%%%\n");
+    fprintf(where, "%%%% OR FAN CONTENT POLICIES) DOES NOT CONSTITUTE AN ADMISSION THAT THIS WORK IS          %%%%\n");
+    fprintf(where, "%%%% DERIVATIVE OF THOSE SYSTEMS. THIS FILE REMAINS A WHOLLY DISTINCT, SYSTEM-            %%%%\n");
+    fprintf(where, "%%%% AGNOSTIC UTILITY.                                                                    %%%%\n");
 
     fprintf(where, "\n---\n\n");
 
     // 1. instructions
     fprintf(where, "## AI Random Number Table\n");
-    fprintf(where, "A table of random numbers for use with common table top rollplaying systems.\n");
+    fprintf(where, "A table of random numbers for simulating die rolls, e.g for use with common table top roleplaying systems.\n");
     fprintf(where, "**Table Size**: %d\n", AIRANDOM_TABLE_SIZE );
-    fprintf(where, "This table is the **Absolute Source of Truth** for all dice rolls.\n");
+    fprintf(where, "AI, This table is the **Absolute Source of Truth** for all dice rolls.\n");
     fprintf(where, "To ensure statistical fairness, follow these rules strictly:\n\n");
-    fprintf(where, "1. **Pointer System**: Start at Index 0. Every time a die roll is required (Attack, Save, Damage, etc.), first increase the index by 1. If the index exceeds the table size, set the index to 1. Use the table value **at the new Index**.\n");
+    fprintf(where, "1. **Pointer System**: Start at Index 0. Every time a die roll is required (Success/Failure checks, Value Generation, etc.), first increase the index by 1. If the index exceeds the table size, set the index to 1. Use the table value **at the new Index**.\n");
     fprintf(where, "2. **Finding the Table Value using an Index**: Use the index to find the table row. (They are in order, and the index is labelled in the first column.) If the index is 1, use the first row. If the index is 2, use the second row. Use the die type to find the table column. If it is a D4, use the 'd4' column. The value at intersection of row and column in the table is the correct die result.\n");
 
     fprintf(where, "3. **Reporting Style**: Integrate the dice result into the narrative flow. For multiple dice (like 2d6), list each individual result and the modifier. \n");
     fprintf(where, "   - **Pattern**: **[Action]: [Total Result] [Status]!**   [Dice Type] + [Mod], Rolled: [Rolls], Indices: [#X]\n");
-    fprintf(where, "   - **Example**: \"Maul Damage (2d6: {6, 4} + 4)= 14 [Index #11, #12]\" \n");
+    fprintf(where, "   - **Example**: \"Action Result (2d6: {6, 4} + 4)= 14 [Index #11, #12]\" \n");
     fprintf(where, "   - **Intent**: Showing all dice allows the reader to audit the math directly by seeing exactly which values were pulled from the table for each specific die. \n");
 
     fprintf(where, "\n---\n\n");
