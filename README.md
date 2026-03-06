@@ -24,7 +24,7 @@ The LLM (acting as DM) is provided with the table and a "Current Index." For eve
 Note: we could ask the LLM to use the D600 value directly and apply suitable modulo operations with appropriate rounding according to desired die type to reduce the size of the table. Unfortunately, the AI and I both agree that this arithmetic is another opportunity for narrative interference into the value, and it is better to simply have the AI read the value from the table. This also makes the result auditable, in the case you begin to suspect that AI context compaction has reduced the table to "Table of Random values here" and the AI is fudging it all. It may be necessary to periodically reload the table as a .md file to restore it to context so it resumes function again.
 
 ## Known Bugs
-1. AI context compaction will probably eventually force the table out of the AI context to be replaced by a summary, such as "Table of Dice Values Appears Here" with no accompanying table, leading to more narrative hallucination by the AI. It is expected the user, suspicious that the game is getting too easy, can just send the fair_dice.md file to the AI again to refresh the table and restore fidelity.
+1. AI context compaction will probably eventually force the table out of the AI context to be replaced by a summary, such as "Table of Dice Values Appears Here" with no accompanying table, leading to more narrative hallucination by the AI. It is expected the user, suspicious that the game is getting too easy, can just send the fair_dice.md file to the AI again to refresh the table and restore fidelity. The AI will report what table row (index) it used for each roll. If this bug is in play, the dice values and the indices will not match the table in fair_dice.md
 
 ## Core Components
 - `AIRandom.h`: Header declaring threadsafe public interfaces (in the unlikely event this is packaged as a library)
@@ -33,16 +33,28 @@ Note: we could ask the LLM to use the D600 value directly and apply suitable mod
 - `fair_dice.md`: Suitable for passing to AI for use with Table top RPGs
 
 ## Mathematical Mapping
-To derive standard D&D dice from the 500-unit Master Value ($V$):  V is in [1,600]
-- **d20**: `((V-1) % 20) + 1`
-- **d12**: `((V-1) % 12) + 1`
-- **d10**: `((V-1) % 10) + 1`
-- **d8**:  `((V-1) % 8) + 1`
-- **d6**:  `((V-1) % 6) + 1`
-- **d4**:  `((V-1) % 4) + 1`
-- **d100**: `(v % 100) + 1`
+To derive standard D&D dice from the 600-unit Master Value ($V$):  V is in [1,600]
+- **d100**: `((V-1) % 100) + 1`
+- **d20**:  `((V-1) % 20) + 1`
+- **d12**:  `((V-1) % 12) + 1`
+- **d10**:  `((V-1) % 10) + 1`
+- **d8**:   `((V-1) % 8) + 1`
+- **d6**:   `((V-1) % 6) + 1`
+- **d4**:   `((V-1) % 4) + 1`
 
-*Note: Because 600 is a multiple of 4, 6. 8, 10, 12, 20, 100, and 600, the distribution for these dice remains perfectly uniform. *
+*Note: Because 600 is a multiple of 4, 6, 8, 10, 12, 20, 100, and 600, the distribution for these dice remains perfectly uniform. *
+
+## To Use with AI
+1. Copy over a D&D session synopsis, character sheets and fair_dice.md to the AI session.
+2. The synopsis should ask the AI to use the fair_dice method for all Dice rolls instead of rolling the normal way.
+
+A D&D session synopsis is a set of instructions for the AI for how to play D&D. It probably already knows how to 
+dungeon master and what the rules are. It is just probably a bit confused about issues like when to stop the clock, 
+who is moving the player characters around, when to ask "What do you want to do now?", what the intent of the D&D 
+exercise is, what version of the rules are we using, what do I need to save when I save the game, player expectations
+about difficulty, hand holding, story setting, etc. So, we write this stuff up for the AI ahead of time, so that our 
+play does not involve a lot of repetitive problem fixing as we go along. The synopsis should be a live document that
+is refined over time. In this way we teach our AI to DM.
 
 ## License
 MIT - Use it to keep your AI honest.
