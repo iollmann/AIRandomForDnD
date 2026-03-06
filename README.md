@@ -8,8 +8,8 @@ Large Language Models (LLMs) are predictive engines. In a D&D context, they ofte
 This repository contains C-based utilities to generate and manage a **Entropy Table of 600**. 
 
 1. **Entropy Generation**: Generates a set of 600 unique integers ($[1, 600]$) in a randomized sequence. 600 is the least common multiple of D{4,6,8,10,12,20,100} which allows for each possible outcome to be sampled a uniform number of times.
-2. **Uniform Distribution**: Ensures every value in the range appears exactly once (on average), providing a perfect uniform distribution of random outcomes that can be audited for fairness.
-3. **Predictable Sequence**: The size of the table, 600, gives the minimum length of non-repeating results. Sequence predictability enables the AI to avoid making up die rolls to suit the narrative, since it knows the answer and doesn't need to guess. With 600 rolls before repeating, the author feels this is enough chaos the average game session is unlikely to detect the issue or care. 
+2. **Uniform Distribution**: Ensures every value in the range appears exactly equal number of times, providing a perfect uniform distribution of random outcomes that can be audited for fairness.
+3. **Predictable Sequence**: The size of the table, 600, gives the minimum length of non-repeating results. Sequence predictability enables the AI to avoid making up die rolls to suit the narrative, since it knows the answer and doesn't need to guess. With 600 rolls before repeating, the author feels this is enough chaos the average game session is unlikely to detect the issue or care, but no so large as to blow out the AI's context window. 
 3. **Markdown Export**: Formats the sequence into a `.md` table for easy integration into an LLM's context window.
 4. **C library interface**: This was unnecessary since the AI will not call it, but was handy for testing.
 
