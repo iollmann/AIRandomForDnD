@@ -29,7 +29,7 @@ Note: we could ask the LLM to use the D600 value directly and apply suitable mod
 ## Core Components
 - `AIRandom.h`: Header declaring threadsafe public interfaces (in the unlikely event this is packaged as a library)
 - `AIRandom.c`: Implementation
-- `test.c` : Some test code to print out the table verify uniform distrubtion and table values are between [1,N] as desired.
+- `test.c` : Some test code to print out the table verify uniform distribution and table values are between [1,N] as desired.
 - `fair_dice.md`: Suitable for passing to AI for use with Table top RPGs
 
 ## Mathematical Mapping
