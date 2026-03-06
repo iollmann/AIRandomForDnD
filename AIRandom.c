@@ -121,19 +121,22 @@ extern void AIRandom_PrintDieTable( FILE * /* nonnull*/ where )
 {
     // Make sure the table is initialized
     InitializeTable();
-    
-    // 0. License
-    fprintf(where, "## **License (MIT)** \n");
-    fprintf(where, "%% THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,  %%\n");
-    fprintf(where, "%% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A        %%\n");
-    fprintf(where, "%% PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT   %%\n");
-    fprintf(where, "%% HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF %%\n");
-    fprintf(where, "%% CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE %%\n");
-    fprintf(where, "%% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                        %%\n");
 
-    
+    fprintf(where, "# fair_dice.md \n\n");
+
+    // 0. License
+    fprintf(where, "## License (MIT) \n");
+    fprintf(where, "%%%% THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,  %%%%\n");
+    fprintf(where, "%%%% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A        %%%%\n");
+    fprintf(where, "%%%% PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT   %%%%\n");
+    fprintf(where, "%%%% HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF %%%%\n");
+    fprintf(where, "%%%% CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE %%%%\n");
+    fprintf(where, "%%%% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                        %%%%\n");
+
+    fprintf(where, "\n---\n\n");
+
     // 1. instructions
-    fprintf(where, "**AI Random Number Table**\n");
+    fprintf(where, "## AI Random Number Table\n");
     fprintf(where, "A table of random numbers for use with common table top rollplaying systems.\n");
     fprintf(where, "**Table Size**: %d\n", AIRANDOM_TABLE_SIZE );
     fprintf(where, "This table is the **Absolute Source of Truth** for all dice rolls.\n");
