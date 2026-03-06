@@ -32,7 +32,7 @@ typedef enum : uint8_t
     AIRandom_D12,       // [1,12]
     AIRandom_D20,       // [1,20]
     AIRandom_D100,      // [1,100]
-    AIRandom_D600       // [1,500]  probably not very popular.
+    AIRandom_D600       // [1,600]  probably not very popular.
 }AIRandom_DieType;
 
 // factorization of dice for least common multiple.
