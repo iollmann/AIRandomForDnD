@@ -23,20 +23,55 @@
 ---
 
 ## AI Random Number Table
-A table of random numbers for simulating die rolls, e.g for use with common table top roleplaying systems.
-**Table Size**: 600
 AI, This table is the **Absolute Source of Truth** for all dice rolls.
 To ensure statistical fairness, follow these rules strictly:
 
-1. **Pointer System**: Start at Index 0. Every time a die roll is required (Success/Failure checks, Value Generation, etc.), first increase the index by 1. If the index exceeds the table size, set the index to 1. Use the table value **at the new Index**.
-2. **Finding the Table Value using an Index**: Use the index to find the table row. (They are in order, and the index is labelled in the first column.) If the index is 1, use the first row. If the index is 2, use the second row. Use the die type to find the table column. If it is a D4, use the 'd4' column. The value at intersection of row and column in the table is the correct die result.
-3. **Reporting Style**: Integrate the dice result into the narrative flow. For multiple dice (like 2d6), list each individual result and the modifier. 
+### Persistent Global Variables
+// Used to find the dice table row 
+static uint32_t fairDiceTableIndex = 0;    // 0 means uninitialized 
+
+// Used to count the number of times the user has sent a prompt to the AI
+uint32_t fairDicePromptCount = 0; // 0 means uninitialized 
+
+static const uint32_t kFairDiceTableSize = 600;
+
+### Persistent Variable Initialization
+// Procedure to resolve the problem if fairDiceTableIndex is uninitialized (has value 0)void InitializeFairDiceTableIndex(){
+   // Using the numeric values for the current real world time provided by your runtime environment
+   //  format: [YEAR]-[NUMERIC_MONTH]-[DAY_OF_MONTH] [HOURS]:[MINUTES]:[SECONDS]
+   //  If you do not know the current date and time, ask the user for the current date and time and initialize the variable
+   //  AI clarification: This modifies the global variable declared in [Persistent Global Variables](#persistent-global-variables).
+   fairDiceTableIndex =  (([DAY_OF_MONTH]*24 + [HOURS])*60 + [MINUTES])*60 + [SECONDS];
+}
+
+### Obtaining The Current FairDiceTableRow
+uint32_t GetCurrentFairDiceTableRow(){
+   // Using the current fairDicePromptCount, which counts the number of prompts that have been issued so far.
+   // If it is 0, meaning uninitialized, set it to 1
+   if( fairDiceTableIndex == 0)        // if is uninitialized 
+   {
+       //  AI clarification: This modifies the global variable declared in [Persistent Global Variables](#persistent-global-variables).
+       fairDiceTableIndex =  (fairDiceTableIndex + [PROMPT_COUNT]) % kFairDiceTableSize + 1;  //Range: [1,kFairDiceTableSize]
+   }
+   return fairDiceTableIndex;
+}
+
+**Finding the Table Value using an Index**: Use the index to find the table row. 
+### Subroutine [ROLL_FAIR_DIE]: 
+   Using: FAIR_DICE_TABLE (Below, the indices are in order given by the first column.)
+   1. TABLE_ROW = GetCurrentFairDiceTableRow(); // The first row is row 1 containing index value 1, The second row is row 2 containing index value 2, and so forth
+   2. The TABLE_COLUMN is obtained by using the die type (e.g. "d8") to find the correct column looking at the table header. If it is a "d8" use the d8 column
+   3. The value at the intersection of TABLE_ROW and TABLE_COLUMN is the correct die result.
+
+**Reporting Style**: Integrate the dice result into the narrative flow. For multiple dice (like 2d6), list each individual result and the modifier. 
    - **Pattern**: **[Action]: [Total Result] [Status]!**   [Dice Type] + [Mod], Rolled: [Rolls], Indices: [#X]
-   - **Example**: "Action Result (2d6: {6, 4} + 4)= 14 [Index #11, #12]" 
-   - **Intent**: Showing all dice allows the reader to audit the math directly by seeing exactly which values were pulled from the table for each specific die. 
+   - **Example**: "Action Result: 14  It's Dead!   2d6 + 4, Rolled: {6, 4}, Indices: {#11, #12}" 
+   - **Example**: "Pea Shooter: 13  A Hit!  d12 + 4, Rolled: 9, Index: #142" 
+   - **Intent**: Showing all dice and table indices allows the reader to audit the roll by seeing exactly which values were pulled from the table for each specific die.
 
 ---
 
+## FAIR_DICE_TABLE
 | Index |  d4 |  d6 |  d8 | d10 | d12 | d20 | d100 | Master Value |
 | :---- | :-- | :-- | :-- | :-- | :-- | :-- | :--- | :----------- |
 |     1 |   1 |   1 |   1 |   9 |   1 |   9 |   89 |     289      |

@@ -145,47 +145,87 @@ extern void AIRandom_PrintDieTable( FILE * /* nonnull*/ where )
     fprintf(where, "# fair_dice.md \n\n");
 
     // 0. License
-    fprintf(where, "## License (MIT) \n");
-    fprintf(where, "%%%% THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,  %%%%\n");
-    fprintf(where, "%%%% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A        %%%%\n");
-    fprintf(where, "%%%% PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT   %%%%\n");
-    fprintf(where, "%%%% HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF %%%%\n");
-    fprintf(where, "%%%% CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE %%%%\n");
-    fprintf(where, "%%%% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                        %%%%\n\n");
-
-    fprintf(where, "%%%% THIS DOCUMENT IS A MATHEMATICAL UTILITY PROVIDING A FRAMEWORK FOR ENTROPY GENERATION.%%%%\n");
-    fprintf(where, "%%%% THE NOMENCLATURE HEREIN (E.G. 'D4', 'D20', ETC.) REFERS TO STANDARD POLYHEDRAL DICE, %%%%\n");
-    fprintf(where, "%%%% GEOMETRIC CONCEPTS AND COMMON-USE TERMINOLOGY THAT PREDATE MODERN TABLETOP GAMING    %%%%\n");
-    fprintf(where, "%%%% SYSTEMS. THIS FILE DOES NOT CONTAINS 'PRODUCT IDENTITY' OR 'CORE RULES' OF ANY       %%%%\n");
-    fprintf(where, "%%%% SPECIFIC GAMING SYSTEM.                                                              %%%%\n\n");
-
-    fprintf(where, "%%%% THIS WORK IS RELEASED UNDER THE MIT LICENSE. ITS INCLUSION IN, OR BUNDLING WITH,     %%%%\n");
-    fprintf(where, "%%%% SOFTWARE OR DOCUMENTATION GOVERNED BY SPECIFIC GAMING LICENSES (SUCH AS THE OGL      %%%%\n");
-    fprintf(where, "%%%% OR FAN CONTENT POLICIES) DOES NOT CONSTITUTE AN ADMISSION THAT THIS WORK IS          %%%%\n");
-    fprintf(where, "%%%% DERIVATIVE OF THOSE SYSTEMS. THIS FILE REMAINS A WHOLLY DISTINCT, SYSTEM-            %%%%\n");
-    fprintf(where, "%%%% AGNOSTIC UTILITY.                                                                    %%%%\n");
+    fprintf(where, "## License (MIT) \n"
+                    "%%%% THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,  %%%%\n"
+                    "%%%% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A        %%%%\n"
+                    "%%%% PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT   %%%%\n"
+                    "%%%% HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF %%%%\n"
+                    "%%%% CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE %%%%\n"
+                    "%%%% OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                        %%%%\n"
+                    "\n"
+                    "%%%% THIS DOCUMENT IS A MATHEMATICAL UTILITY PROVIDING A FRAMEWORK FOR ENTROPY GENERATION.%%%%\n"
+                    "%%%% THE NOMENCLATURE HEREIN (E.G. 'D4', 'D20', ETC.) REFERS TO STANDARD POLYHEDRAL DICE, %%%%\n"
+                    "%%%% GEOMETRIC CONCEPTS AND COMMON-USE TERMINOLOGY THAT PREDATE MODERN TABLETOP GAMING    %%%%\n"
+                    "%%%% SYSTEMS. THIS FILE DOES NOT CONTAINS 'PRODUCT IDENTITY' OR 'CORE RULES' OF ANY       %%%%\n"
+                    "%%%% SPECIFIC GAMING SYSTEM.                                                              %%%%\n"
+                    "\n"
+                    "%%%% THIS WORK IS RELEASED UNDER THE MIT LICENSE. ITS INCLUSION IN, OR BUNDLING WITH,     %%%%\n"
+                    "%%%% SOFTWARE OR DOCUMENTATION GOVERNED BY SPECIFIC GAMING LICENSES (SUCH AS THE OGL      %%%%\n"
+                    "%%%% OR FAN CONTENT POLICIES) DOES NOT CONSTITUTE AN ADMISSION THAT THIS WORK IS          %%%%\n"
+                    "%%%% DERIVATIVE OF THOSE SYSTEMS. THIS FILE REMAINS A WHOLLY DISTINCT, SYSTEM-            %%%%\n"
+                    "%%%% AGNOSTIC UTILITY.                                                                    %%%%\n");
 
     fprintf(where, "\n---\n\n");
 
     // 1. instructions
-    fprintf(where, "## AI Random Number Table\n");
-    fprintf(where, "A table of random numbers for simulating die rolls, e.g for use with common table top roleplaying systems.\n");
-    fprintf(where, "**Table Size**: %d\n", AIRANDOM_TABLE_SIZE );
-    fprintf(where, "AI, This table is the **Absolute Source of Truth** for all dice rolls.\n");
-    fprintf(where, "To ensure statistical fairness, follow these rules strictly:\n\n");
-    fprintf(where, "1. **Pointer System**: Start at Index 0. Every time a die roll is required (Success/Failure checks, Value Generation, etc.), first increase the index by 1. If the index exceeds the table size, set the index to 1. Use the table value **at the new Index**.\n");
-    fprintf(where, "2. **Finding the Table Value using an Index**: Use the index to find the table row. (They are in order, and the index is labelled in the first column.) If the index is 1, use the first row. If the index is 2, use the second row. Use the die type to find the table column. If it is a D4, use the 'd4' column. The value at intersection of row and column in the table is the correct die result.\n");
+    fprintf(where,  "## AI Random Number Table\n"
+                    "AI, This table is the **Absolute Source of Truth** for all dice rolls.\n"
+                    "To ensure statistical fairness, follow these rules strictly:\n"
+                    "\n"
+                    "### Persistent Global Variables\n"
+                    "// Used to find the dice table row \n"
+                    "static uint32_t fairDiceTableIndex = 0;    // 0 means uninitialized \n"
+                    "\n"
+                    "// Used to count the number of times the user has sent a prompt to the AI\n"
+                    "uint32_t fairDicePromptCount = 0; // 0 means uninitialized \n"
+                    "\n"
+                    "static const uint32_t kFairDiceTableSize = %d;\n\n", AIRANDOM_TABLE_SIZE );
 
-    fprintf(where, "3. **Reporting Style**: Integrate the dice result into the narrative flow. For multiple dice (like 2d6), list each individual result and the modifier. \n");
+    fprintf(where,  "### Persistent Variable Initialization\n"
+                    "// Procedure to resolve the problem if fairDiceTableIndex is uninitialized (has value 0)"
+                    "void InitializeFairDiceTableIndex(){\n"
+                    "   // Using the numeric values for the current real world time provided by your runtime environment\n"
+                    "   //  format: [YEAR]-[NUMERIC_MONTH]-[DAY_OF_MONTH] [HOURS]:[MINUTES]:[SECONDS]\n"
+                    "   //  If you do not know the current date and time, ask the user for the current date and time and initialize the variable\n"
+                    "   //  AI clarification: This modifies the global variable declared in [Persistent Global Variables](#persistent-global-variables).\n"
+                    "   fairDiceTableIndex =  (([DAY_OF_MONTH]*24 + [HOURS])*60 + [MINUTES])*60 + [SECONDS];\n"
+                    "}\n\n" );
+
+    fprintf(where,  "### Obtaining The Current FairDiceTableRow\n"
+                    "uint32_t GetCurrentFairDiceTableRow(){\n"
+                    "   // Using the current fairDicePromptCount, which counts the number of prompts that have been issued so far.\n"
+                    "   // If it is 0, meaning uninitialized, set it to 1\n"
+                    "   if( fairDiceTableIndex == 0)        // if is uninitialized \n"
+                    "   {\n"
+                    "       //  AI clarification: This modifies the global variable declared in [Persistent Global Variables](#persistent-global-variables).\n"
+                    "       fairDiceTableIndex =  (fairDiceTableIndex + [PROMPT_COUNT]) %% kFairDiceTableSize + 1;  //Range: [1,kFairDiceTableSize]\n"
+                    "   }\n"
+                    "   return fairDiceTableIndex;\n"
+                    "}\n\n" );
+
+                    
+            
+
+    fprintf(where, "**Finding the Table Value using an Index**: Use the index to find the table row. \n");
+    fprintf(where,  "### Subroutine [ROLL_FAIR_DIE]: \n"
+                    "   Using: FAIR_DICE_TABLE (Below, the indices are in order given by the first column.)\n"
+                    "   1. TABLE_ROW = GetCurrentFairDiceTableRow(); // The first row is row 1 containing index value 1, The second row is row 2 containing index value 2, and so forth\n"
+                    "   2. The TABLE_COLUMN is obtained by using the die type (e.g. \"d8\") to find the correct column looking at the table header. If it is a \"d8\" use the d8 column\n"
+                    "   3. The value at the intersection of TABLE_ROW and TABLE_COLUMN is the correct die result.\n"
+                    "\n" );
+
+    fprintf(where, "**Reporting Style**: Integrate the dice result into the narrative flow. For multiple dice (like 2d6), list each individual result and the modifier. \n");
     fprintf(where, "   - **Pattern**: **[Action]: [Total Result] [Status]!**   [Dice Type] + [Mod], Rolled: [Rolls], Indices: [#X]\n");
-    fprintf(where, "   - **Example**: \"Action Result (2d6: {6, 4} + 4)= 14 [Index #11, #12]\" \n");
-    fprintf(where, "   - **Intent**: Showing all dice allows the reader to audit the math directly by seeing exactly which values were pulled from the table for each specific die. \n");
+    fprintf(where, "   - **Example**: \"Action Result: 14  It's Dead!   2d6 + 4, Rolled: {6, 4}, Indices: {#11, #12}\" \n");
+    fprintf(where, "   - **Example**: \"Pea Shooter: 13  A Hit!  d12 + 4, Rolled: 9, Index: #142\" \n");
+    fprintf(where, "   - **Intent**: Showing all dice and table indices allows the reader to audit the roll by seeing exactly which values were pulled from the table for each specific die.\n");
 
     fprintf(where, "\n---\n\n");
     
     // 2. Write the Table Header
-    fprintf(where, "| Index |  d4 |  d6 |  d8 | d10 | d12 | d20 | d100 | Master Value |\n");
-    fprintf(where, "| :---- | :-- | :-- | :-- | :-- | :-- | :-- | :--- | :----------- |\n");
+    fprintf(where,  "## FAIR_DICE_TABLE\n"
+                    "| Index |  d4 |  d6 |  d8 | d10 | d12 | d20 | d100 | Master Value |\n"
+                    "| :---- | :-- | :-- | :-- | :-- | :-- | :-- | :--- | :----------- |\n");
     
     for( unsigned long i = 0; i < AIRANDOM_TABLE_SIZE; i++ )
     {
