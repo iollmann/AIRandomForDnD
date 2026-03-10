@@ -27,6 +27,7 @@ AI, This table is the **Absolute Source of Truth** for all dice rolls.
 To ensure statistical fairness, follow these rules strictly:
 
 ### Persistent Global Variables
+```
 // Used to find the dice table row 
 static uint32_t fairDiceTableIndex = 0;    // 0 means uninitialized 
 
@@ -34,17 +35,20 @@ static uint32_t fairDiceTableIndex = 0;    // 0 means uninitialized
 uint32_t fairDicePromptCount = 0; // 0 means uninitialized 
 
 static const uint32_t kFairDiceTableSize = 600;
-
+```
 ### Persistent Variable Initialization
-// Procedure to resolve the problem if fairDiceTableIndex is uninitialized (has value 0)void InitializeFairDiceTableIndex(){
+```
+// Procedure to resolve the problem if fairDiceTableIndex is uninitialized (has value 0)
+void InitializeFairDiceTableIndex(){
    // Using the numeric values for the current real world time provided by your runtime environment
    //  format: [YEAR]-[NUMERIC_MONTH]-[DAY_OF_MONTH] [HOURS]:[MINUTES]:[SECONDS]
    //  If you do not know the current date and time, ask the user for the current date and time and initialize the variable
    //  AI clarification: This modifies the global variable declared in [Persistent Global Variables](#persistent-global-variables).
    fairDiceTableIndex =  (([DAY_OF_MONTH]*24 + [HOURS])*60 + [MINUTES])*60 + [SECONDS];
 }
-
+```
 ### Obtaining The Current FairDiceTableRow
+```
 uint32_t GetCurrentFairDiceTableRow(){
    // Using the current fairDicePromptCount, which counts the number of prompts that have been issued so far.
    // If it is 0, meaning uninitialized, set it to 1
@@ -55,7 +59,7 @@ uint32_t GetCurrentFairDiceTableRow(){
    }
    return fairDiceTableIndex;
 }
-
+```
 **Finding the Table Value using an Index**: Use the index to find the table row. 
 ### Subroutine [ROLL_FAIR_DIE]: 
    Using: FAIR_DICE_TABLE (Below, the indices are in order given by the first column.)
@@ -674,3 +678,4 @@ uint32_t GetCurrentFairDiceTableRow(){
 |   598 |   1 |   5 |   5 |   1 |   5 |   1 |   61 |     461      |
 |   599 |   4 |   6 |   8 |   6 |  12 |  16 |   76 |     576      |
 |   600 |   1 |   3 |   5 |   7 |   9 |  17 |   77 |     477      |
+

@@ -173,25 +173,31 @@ extern void AIRandom_PrintDieTable( FILE * /* nonnull*/ where )
                     "To ensure statistical fairness, follow these rules strictly:\n"
                     "\n"
                     "### Persistent Global Variables\n"
+                    "\`\`\`\n"
                     "// Used to find the dice table row \n"
                     "static uint32_t fairDiceTableIndex = 0;    // 0 means uninitialized \n"
                     "\n"
                     "// Used to count the number of times the user has sent a prompt to the AI\n"
                     "uint32_t fairDicePromptCount = 0; // 0 means uninitialized \n"
                     "\n"
-                    "static const uint32_t kFairDiceTableSize = %d;\n\n", AIRANDOM_TABLE_SIZE );
+                    "static const uint32_t kFairDiceTableSize = %d;\n"
+                    "\`\`\`\n", AIRANDOM_TABLE_SIZE );
+    
 
     fprintf(where,  "### Persistent Variable Initialization\n"
-                    "// Procedure to resolve the problem if fairDiceTableIndex is uninitialized (has value 0)"
+                    "\`\`\`\n"
+                    "// Procedure to resolve the problem if fairDiceTableIndex is uninitialized (has value 0)\n"
                     "void InitializeFairDiceTableIndex(){\n"
                     "   // Using the numeric values for the current real world time provided by your runtime environment\n"
                     "   //  format: [YEAR]-[NUMERIC_MONTH]-[DAY_OF_MONTH] [HOURS]:[MINUTES]:[SECONDS]\n"
                     "   //  If you do not know the current date and time, ask the user for the current date and time and initialize the variable\n"
                     "   //  AI clarification: This modifies the global variable declared in [Persistent Global Variables](#persistent-global-variables).\n"
                     "   fairDiceTableIndex =  (([DAY_OF_MONTH]*24 + [HOURS])*60 + [MINUTES])*60 + [SECONDS];\n"
-                    "}\n\n" );
+                    "}\n"
+                    "\`\`\`\n" );
 
     fprintf(where,  "### Obtaining The Current FairDiceTableRow\n"
+                    "\`\`\`\n"
                     "uint32_t GetCurrentFairDiceTableRow(){\n"
                     "   // Using the current fairDicePromptCount, which counts the number of prompts that have been issued so far.\n"
                     "   // If it is 0, meaning uninitialized, set it to 1\n"
@@ -201,7 +207,8 @@ extern void AIRandom_PrintDieTable( FILE * /* nonnull*/ where )
                     "       fairDiceTableIndex =  (fairDiceTableIndex + [PROMPT_COUNT]) %% kFairDiceTableSize + 1;  //Range: [1,kFairDiceTableSize]\n"
                     "   }\n"
                     "   return fairDiceTableIndex;\n"
-                    "}\n\n" );
+                    "}\n"
+                    "\`\`\`\n" );
 
                     
             
